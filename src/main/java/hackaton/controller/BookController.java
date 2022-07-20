@@ -43,9 +43,14 @@ public class BookController {
      * @return        : ResponseEntity & the author inserted
      */
     @PostMapping(PREFIX)
-    public ResponseEntity<Book> postName(@RequestParam(name = NAME_PARAM, required = false) final String name,
+    public ResponseEntity<Book> insertBook(@RequestParam(name = NAME_PARAM, required = false) final String name,
             @RequestParam(name = ID_PARAM, required = false) final String isbn) {
         Book author = new Book(isbn, name);
+
+        if (imp.existById(isbn)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .header("Error", "A book already exists with the isbn provided").body(null);
+        }
         author = imp.insert(author);
         return ResponseEntity.status(HttpStatus.CREATED).body(author);
 

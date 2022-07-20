@@ -1,23 +1,33 @@
 package hackaton.controller;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import hackaton.models.Book;
-import hackaton.serveis.BookImpl;
+import hackaton.models.Author;
+import hackaton.serveis.AuthorImpl;
 
-@RestController("hack/surname")
-public class SurnameController {
+@RestController
+public class AuthorController {
+
     // post
     @Autowired
-    private BookImpl imp;
+    private AuthorImpl imp;
 
     public static final String PREFIX = "/hack/author";
     public static final String NAME_PARAM = "name";
-    public static final String ID_PARAM = "isbn";
+    public static final String SURNAME_PARAM = "surname";
+    public static final String ID_PARAM = "id";
 
     /*
      * Ruta de crear un model:
@@ -31,9 +41,9 @@ public class SurnameController {
     // checked
     // TODO: test!
     @PostMapping(PREFIX)
-    public ResponseEntity<Book> postName(@RequestParam(name = NAME_PARAM, required = false) final String name,
+    public ResponseEntity<Author> postName(@RequestParam(name = NAME_PARAM, required = false) final String name,
             @RequestParam(name = SURNAME_PARAM, required = false) final String surname) {
-        Book author = new Book(name, surname);
+        Author author = new Author(name, surname);
         author = imp.insert(author);
         return ResponseEntity.status(HttpStatus.CREATED).body(author);
 
@@ -47,8 +57,8 @@ public class SurnameController {
     // checked
     // TODO: test!
     @GetMapping(PREFIX + "/all")
-    public ResponseEntity<List<Book>> getAll() {
-        List<Book> authors = this.imp.findAll();
+    public ResponseEntity<List<Author>> getAll() {
+        List<Author> authors = this.imp.findAll();
         return ResponseEntity.ok().body(authors);
     }
 
@@ -70,14 +80,14 @@ public class SurnameController {
     // checked
     // TODO: test
     @GetMapping(PREFIX + "/{"+ ID_PARAM + "}")
-    public ResponseEntity<Book> getById(@PathVariable(name = ID_PARAM) final Long id) {
-        Optional<Book> author = this.imp.findById(id);
+    public ResponseEntity<Author> getById(@PathVariable(name = ID_PARAM) final Long id) {
+        Optional<Author> author = this.imp.findById(id);
 
         if (author.isPresent()) {
             return ResponseEntity.ok().body(author.get());
         }                
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).header("Error", "No Book with the ID provided").body(null);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).header("Error", "No Author with the ID provided").body(null);
     }
 
     /*
@@ -95,14 +105,14 @@ public class SurnameController {
      */
 
     @PutMapping(PREFIX + "/{"+ ID_PARAM + "}")
-    public ResponseEntity<Book> updateById(@PathVariable(name = ID_PARAM, required = true) final Long id,
+    public ResponseEntity<Author> updateById(@PathVariable(name = ID_PARAM, required = true) final Long id,
             @RequestParam(name = NAME_PARAM) final String name,
             @RequestParam(name = SURNAME_PARAM) final String surname) {
         
-        Optional<Book> toMod = this.imp.findById(id);
+        Optional<Author> toMod = this.imp.findById(id);
 
         if (toMod.isPresent()) {
-            Book mod = toMod.get();
+            Author mod = toMod.get();
 
             if (name != null) {
                 mod.setName(name);

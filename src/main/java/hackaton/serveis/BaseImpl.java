@@ -3,17 +3,12 @@ package hackaton.serveis;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public abstract class BaseImpl<T, U> {
-    
+public abstract class BaseImpl<T, U> {    
     
     protected JpaRepository<T, U> repo;
 
-    /*public BaseImpl(JpaRepository<T, U> repo) {
-        this.repo = repo;
-    }*/
 
     // create model
     public T insert(final T entity) {

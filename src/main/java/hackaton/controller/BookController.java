@@ -14,20 +14,18 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import hackaton.models.Author;
-import hackaton.serveis.AuthorImpl;
+import hackaton.models.Book;
+import hackaton.serveis.BookImpl;
 
 @RestController
-public class NameController {
-
+public class BookController {
     // post
     @Autowired
-    private AuthorImpl imp;
+    private BookImpl imp;
 
-    public static final String PREFIX = "/hack/author";
+    public static final String PREFIX = "/hack/book";
     public static final String NAME_PARAM = "name";
-    public static final String SURNAME_PARAM = "surname";
-    public static final String ID_PARAM = "id";
+    public static final String ID_PARAM = "isbn";
 
     /*
      * Ruta de crear un model:
@@ -39,11 +37,10 @@ public class NameController {
      * la resposta ha de contenir el model creat.
      */
     // checked
-    // TODO: test!
     @PostMapping(PREFIX)
-    public ResponseEntity<Author> postName(@RequestParam(name = NAME_PARAM, required = false) final String name,
-            @RequestParam(name = SURNAME_PARAM, required = false) final String surname) {
-        Author author = new Author(name, surname);
+    public ResponseEntity<Book> postName(@RequestParam(name = NAME_PARAM, required = false) final String name,
+            @RequestParam(name = ID_PARAM, required = false) final String isbn) {
+        Book author = new Book(isbn, name);
         author = imp.insert(author);
         return ResponseEntity.status(HttpStatus.CREATED).body(author);
 
@@ -55,10 +52,9 @@ public class NameController {
      * Ha de tornar una llista amb les instàncies del model especificat:
      */
     // checked
-    // TODO: test!
     @GetMapping(PREFIX + "/all")
-    public ResponseEntity<List<Author>> getAll() {
-        List<Author> authors = this.imp.findAll();
+    public ResponseEntity<List<Book>> getAll() {
+        List<Book> authors = this.imp.findAll();
         return ResponseEntity.ok().body(authors);
     }
 
@@ -78,16 +74,15 @@ public class NameController {
      * 
      */
     // checked
-    // TODO: test
     @GetMapping(PREFIX + "/{"+ ID_PARAM + "}")
-    public ResponseEntity<Author> getById(@PathVariable(name = ID_PARAM) final Long id) {
-        Optional<Author> author = this.imp.findById(id);
+    public ResponseEntity<Book> getById(@PathVariable(name = ID_PARAM) final String id) {
+        Optional<Book> author = this.imp.findById(id);
 
         if (author.isPresent()) {
             return ResponseEntity.ok().body(author.get());
         }                
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).header("Error", "No Author with the ID provided").body(null);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).header("Error", "No Book with the ISBN provided").body(null);
     }
 
     /*
@@ -105,31 +100,24 @@ public class NameController {
      */
 
     @PutMapping(PREFIX + "/{"+ ID_PARAM + "}")
-    public ResponseEntity<Author> updateById(@PathVariable(name = ID_PARAM, required = true) final Long id,
-            @RequestParam(name = NAME_PARAM) final String name,
-            @RequestParam(name = SURNAME_PARAM) final String surname) {
+    public ResponseEntity<Book> updateById(@PathVariable(name = ID_PARAM, required = true) final String id,
+            @RequestParam(name = NAME_PARAM) final String name) {
         
-        Optional<Author> toMod = this.imp.findById(id);
+        Optional<Book> toMod = this.imp.findById(id);
 
         if (toMod.isPresent()) {
-            Author mod = toMod.get();
+            Book mod = toMod.get();
 
             if (name != null) {
                 mod.setName(name);
             }
-
-            if (surname != null) {
-                mod.setSurname(surname);
-            }
-
             // hemos hecho el check antes, así que no hay problema
             // ademas modificamos el mismo obj, no problem
-            toMod = this.imp.updateFromId(mod, mod.getId());
+            toMod = this.imp.updateFromId(mod, mod.getIsbn());
 
             return ResponseEntity.status(HttpStatus.CREATED).body(toMod.get());
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).header("Error", "No Book with the ISBN provided").body(null);
     }
 
     /*
@@ -144,12 +132,8 @@ public class NameController {
      * 
      */
     // checkd
-    // TODO: test
     @DeleteMapping(PREFIX + "/{"+ ID_PARAM + "}")
-    public ResponseEntity<Boolean> deleteModel(@PathVariable(name = ID_PARAM, required = true) final Long id) {
-        // hay varias maneras de hacer esto, podemos hacer un existById en el repo, 
-        // podemos pillar el author y demás,... 
-        // creo que usaré un exists
+    public ResponseEntity<Boolean> deleteModel(@PathVariable(name = ID_PARAM, required = true) final String id) {
 
         if (this.imp.existById(id)) {
             this.imp.deleteById(id);
@@ -158,5 +142,5 @@ public class NameController {
         
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
         
-    }
+    }    
 }

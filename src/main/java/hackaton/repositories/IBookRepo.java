@@ -5,6 +5,9 @@ import org.springframework.stereotype.Repository;
 
 import hackaton.models.Book;
 
+/**
+ * The book repository
+ */
 @Repository
 public interface IBookRepo extends JpaRepository<Book, String> {
     

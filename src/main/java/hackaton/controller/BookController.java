@@ -17,6 +17,15 @@ import org.springframework.web.bind.annotation.RestController;
 import hackaton.models.Book;
 import hackaton.serveis.BookImpl;
 
+/**
+ * RestController for the Book. 
+ * Enpoints for:
+ *   - insert Book
+ *   - update Book
+ *   - delete Book
+ *   - list_all Book
+ *   - list by id Book
+ */
 @RestController
 public class BookController {
     // post
@@ -27,16 +36,12 @@ public class BookController {
     public static final String NAME_PARAM = "name";
     public static final String ID_PARAM = "isbn";
 
-    /*
-     * Ruta de crear un model:
-     * S'ha d'implementar amb el mètode POST
-     * El cos de la petició HTTP ha de complir tots els camps del model, una vegada
-     * això sigui validat es procedirà a crear el model o tornar un missatge a
-     * l'usuari com que hi ha hagut un error.
-     * Un cop creat el model s'ha de tornar amb un codi de resposta 201, i el cos de
-     * la resposta ha de contenir el model creat.
+     /**
+     * Save a book into the database 
+     * @param name    : the books name
+     * @param surname : the books surname
+     * @return        : ResponseEntity & the author inserted
      */
-    // checked
     @PostMapping(PREFIX)
     public ResponseEntity<Book> postName(@RequestParam(name = NAME_PARAM, required = false) final String name,
             @RequestParam(name = ID_PARAM, required = false) final String isbn) {
@@ -46,34 +51,21 @@ public class BookController {
 
     }
 
-    /*
-     * Ruta per obtenir tots els models:
-     * S'ha d'implementar usant el mètode GET
-     * Ha de tornar una llista amb les instàncies del model especificat:
+    /**
+     * Gets all the books from the database
+     * @return : ResponseEntity & List of authors
      */
-    // checked
     @GetMapping(PREFIX + "/all")
     public ResponseEntity<List<Book>> getAll() {
         List<Book> authors = this.imp.findAll();
         return ResponseEntity.ok().body(authors);
     }
 
-    /*
-     * Ruta per obtenir un model segons identificador:
-     * 
-     * Usar el mètode GET
-     * 
-     * Aquesta ruta ha d'obtenir un identificador per poder buscar el model, la
-     * manera més senzilla de fer-ho és posar-lo a la URL. Per exemple:
-     * http://localhost:3000/models/asdf1jk2 .
-     * 
-     * Quan s'hagi realitzat la cerca d'acord amb l'identificador, s'ha de tornar un
-     * json amb la instància del model trobat.
-     * 
-     * En cas que no s'hagi trobat el model s'ha de tornar un codi de resposta 404.
-     * 
+    /**
+     * Gets a book for it's id. If not exists, returns 404
+     * @param id : the id to check
+     * @return   : ResponseEntity & book
      */
-    // checked
     @GetMapping(PREFIX + "/{"+ ID_PARAM + "}")
     public ResponseEntity<Book> getById(@PathVariable(name = ID_PARAM) final String id) {
         Optional<Book> author = this.imp.findById(id);
@@ -85,20 +77,13 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).header("Error", "No Book with the ISBN provided").body(null);
     }
 
-    /*
-     * Ruta per fer l'update:
-     * 
-     * S'ha d'implementar amb el mètode PUT
-     * 
-     * El cos de la petició HTTP ha de complir tots els camps del model, una vegada
-     * això sigui validat es procedirà a modificar el model o tornar un missatge a
-     * l'usuari com que hi ha hagut un error.
-     * 
-     * Un cop modificat el model s'ha de tornar amb un codi de resposta 201, i el
-     * cos de la resposta ha de contenir el model modificat.
-     * 
+    /**
+     * Updates a book if exists. If so, returns 201, else 404
+     * @param id     : id to check 
+     * @param name   : new name for the book
+     * @param surname : new surname for the book
+     * @return        : ResponseEntity & modified book
      */
-
     @PutMapping(PREFIX + "/{"+ ID_PARAM + "}")
     public ResponseEntity<Book> updateById(@PathVariable(name = ID_PARAM, required = true) final String id,
             @RequestParam(name = NAME_PARAM) final String name) {
@@ -120,18 +105,11 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).header("Error", "No Book with the ISBN provided").body(null);
     }
 
-    /*
-     * 
-     * Ruta per esborrar un model
-     * Usar el mètode DELETE
-     * Aquesta ruta ha d'obtenir un identificador per poder buscar el model, la
-     * manera més senzilla de fer-ho és posar-lo a la URL, com s'ha explicat abans.
-     * Quan s'hagi realitzat la cerca d'acord a l'identificador, es procedirà a
-     * esborrar el model ia respondre amb un 201 de codi de resposta.
-     * En cas que no s'hagi trobat el model s'ha de tornar un codi de resposta 404.
-     * 
+    /**
+     * Deletes a book if exists
+     * @param id : id to check
+     * @return   : Responseentity
      */
-    // checkd
     @DeleteMapping(PREFIX + "/{"+ ID_PARAM + "}")
     public ResponseEntity<Boolean> deleteModel(@PathVariable(name = ID_PARAM, required = true) final String id) {
 

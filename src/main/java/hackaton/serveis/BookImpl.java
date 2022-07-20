@@ -39,7 +39,4 @@ public class BookImpl extends BaseImpl<Book, String> {
 
     }
 
-    public void deleteAll() {
-        bookRepo.deleteAll();
-    }
 }

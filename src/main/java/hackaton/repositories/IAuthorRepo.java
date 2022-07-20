@@ -5,6 +5,9 @@ import org.springframework.stereotype.Repository;
 
 import hackaton.models.Author;
 
+/**
+ * The Author repository
+ */
 @Repository
 public interface IAuthorRepo extends JpaRepository<Author, Long>  {
     

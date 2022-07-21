@@ -1,4 +1,4 @@
-package hackaton;
+package cbs;
 
 import org.springframework.context.annotation.Configuration;
 

@@ -1,4 +1,4 @@
-package hackaton.controller;
+package cbs.controller;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import hackaton.models.Author;
-import hackaton.serveis.AuthorImpl;
+import cbs.models.Author;
+import cbs.serveis.AuthorImpl;
 
 /**
  * RestController for the Author. 
@@ -35,7 +35,7 @@ public class AuthorController {
     /**
      * prefix for all the endpoints.
      */
-    public static final String PREFIX = "/hack/author";
+    public static final String PREFIX = "/cbs/author";
     public static final String NAME_PARAM = "name";
     public static final String SURNAME_PARAM = "surname";
     public static final String ID_PARAM = "id";

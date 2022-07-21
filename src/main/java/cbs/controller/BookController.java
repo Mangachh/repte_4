@@ -1,4 +1,4 @@
-package hackaton.controller;
+package cbs.controller;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import hackaton.models.Book;
-import hackaton.serveis.BookImpl;
+import cbs.models.Book;
+import cbs.serveis.BookImpl;
 
 /**
  * RestController for the Book. 
@@ -32,7 +32,7 @@ public class BookController {
     @Autowired
     private BookImpl imp;
 
-    public static final String PREFIX = "/hack/book";
+    public static final String PREFIX = "/cbs/book";
     public static final String NAME_PARAM = "name";
     public static final String ID_PARAM = "isbn";
 

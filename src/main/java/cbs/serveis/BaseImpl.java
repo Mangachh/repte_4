@@ -1,4 +1,4 @@
-package hackaton.serveis;
+package cbs.serveis;
 
 import java.util.List;
 import java.util.Optional;

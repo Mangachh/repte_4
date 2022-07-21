@@ -1,11 +1,11 @@
-package hackaton;
+package cbs;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import hackaton.middleware.AuthorHandler;
-import hackaton.middleware.BookHandler;
+import cbs.middleware.AuthorHandler;
+import cbs.middleware.BookHandler;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {

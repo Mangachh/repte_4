@@ -1,4 +1,4 @@
-package hackaton.models;
+package cbs.models;
 
 import javax.annotation.Generated;
 import javax.persistence.Column;

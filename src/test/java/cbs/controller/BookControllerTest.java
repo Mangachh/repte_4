@@ -1,4 +1,4 @@
-package hackaton.demo.controller;
+package cbs.controller;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,76 +14,72 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import hackaton.controller.AuthorController;
-import hackaton.models.Author;
-import hackaton.serveis.AuthorImpl;
+import cbs.controller.BookController;
+import cbs.models.Book;
+import cbs.serveis.BookImpl;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc(addFilters = false)
-public class AuthorControllerTest {
+public class BookControllerTest {
+
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private AuthorImpl impl;
+    private BookImpl impl;
 
     private final static String NAME = "MockName";
-    private final static String SURNAME = "MockSurname";
-    private final static Long ID = 5L;
+    private final static String ID = "5447884";
 
     @Test
-    void insertAuthor() throws Exception {
-        Author auth = new Author(NAME, SURNAME);
-        String request = String.format("%s?%s=%s&%s=%s", AuthorController.PREFIX, AuthorController.NAME_PARAM, NAME,
-                AuthorController.SURNAME_PARAM, SURNAME);
+    void insertBook() throws Exception {
+        Book book = new Book(ID, NAME);
+        String request = String.format("%s?%s=%s&%s=%s", BookController.PREFIX, BookController.NAME_PARAM, NAME,
+        BookController.ID_PARAM, ID);
 
-        Mockito.when(impl.insert(auth)).thenReturn(auth);
+        Mockito.when(impl.insert(book)).thenReturn(book);
 
         this.mockMvc.perform(MockMvcRequestBuilders.post(request)
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.status().isCreated())
-            .andExpect(MockMvcResultMatchers.jsonPath("@.name").value(NAME))
-            .andExpect(MockMvcResultMatchers.jsonPath("@.surname").value(SURNAME));
+            .andExpect(MockMvcResultMatchers.jsonPath("@.name").value(NAME));
 
     }
 
     @Test
     void getAll() throws Exception {
-        final String request = String.format("%s/%s", AuthorController.PREFIX, "all");
+        final String request = String.format("%s/%s", BookController.PREFIX, "all");
 
-        Author a = new Author(NAME + "_A", SURNAME + "_A");
-        Author b = new Author(NAME + "_B", SURNAME + "_B");
-        List<Author> answer = List.of(a, b);
+        Book a = new Book(ID, NAME + "_A");
+        Book b = new Book(ID + "l" + "_B");
+        List<Book> answer = List.of(a, b);
 
         Mockito.when(this.impl.findAll()).thenReturn(answer);
 
-        this.mockMvc.perform(MockMvcRequestBuilders.get(                request)
+        this.mockMvc.perform(MockMvcRequestBuilders.get(request)
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpectAll(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.jsonPath("@.[0].name").value(a.getName()))
-            .andExpect(MockMvcResultMatchers.jsonPath("@.[0].surname").value(a.getSurname()))
-            .andExpect(MockMvcResultMatchers.jsonPath("@.[1].name").value(b.getName()))
-            .andExpect(MockMvcResultMatchers.jsonPath("@.[1].surname").value(b.getSurname()));
+            .andExpect(MockMvcResultMatchers.jsonPath("@.[1].name").value(b.getName()));
 
     }
 
     @Test
     void getByIdSuccess() throws Exception {
-        final Author auth = new Author(ID, NAME, SURNAME);
-        final String request = String.format("%s/%d", AuthorController.PREFIX, ID);
+        final Book book = new Book(ID, NAME);
+        final String request = String.format("%s/%s", BookController.PREFIX, ID);
 
-        Mockito.when(impl.findById(ID)).thenReturn(Optional.of(auth));
+        Mockito.when(impl.findById(ID)).thenReturn(Optional.of(book));
 
         this.mockMvc.perform(MockMvcRequestBuilders.get(request)
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.status().isOk())
-            .andExpect(MockMvcResultMatchers.jsonPath("@.name").value(auth.getName()))
-            .andExpect(MockMvcResultMatchers.jsonPath("@.surname").value(auth.getSurname()));
+            .andExpect(MockMvcResultMatchers.jsonPath("@.name").value(book.getName()));
     }
 
     @Test
     void getByIdFail() throws Exception {
-        final String request = String.format("%s/%d", AuthorController.PREFIX, ID);
+        final String request = String.format("%s/%s", BookController.PREFIX, ID);
 
         Mockito.when(impl.findById(ID)).thenReturn(Optional.empty());
 
@@ -97,11 +93,11 @@ public class AuthorControllerTest {
     // aqui faltaria el update
     @Test
     void updateNameSuccess() throws Exception{
-        final Author original = new Author(ID, NAME, SURNAME);
+        final Book original = new Book(ID, NAME);
         final String newName = "New_" + NAME;
-        final Author newAuth = new Author(ID, newName, SURNAME);
+        final Book newAuth = new Book(ID, newName);
 
-        final String request = String.format("%s/%d?%s=%s", AuthorController.PREFIX, ID, AuthorController.NAME_PARAM,
+        final String request = String.format("%s/%s?%s=%s", BookController.PREFIX, ID, BookController.NAME_PARAM,
                 newName);
         System.out.println(request);
 
@@ -111,39 +107,16 @@ public class AuthorControllerTest {
         this.mockMvc.perform(MockMvcRequestBuilders.put(request)
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.status().isCreated())
-            .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(newName))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.surname").value(SURNAME));        
-    }
-
-    @Test
-    void updateSurnameSuccess() throws Exception {
-        final Author original = new Author(ID, NAME, SURNAME);
-        final String newSurname = "New_" + SURNAME;
-        final Author newAuth = new Author(ID, NAME, newSurname);
-
-        final String request = String.format("%s/%d?%s=%s", AuthorController.PREFIX, ID, AuthorController.SURNAME_PARAM,
-                newSurname);
-        System.out.println(request);
-
-        Mockito.when(impl.findById(ID)).thenReturn(Optional.of(original));
-        Mockito.when(impl.updateFromId(newAuth, ID)).thenReturn(Optional.of(newAuth));
-
-        this.mockMvc.perform(MockMvcRequestBuilders.put(request)
-                .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(MockMvcResultMatchers.status().isCreated())
-            .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(NAME))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.surname").value(newSurname));
-    }
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(newName));;        
+    }   
     
     @Test
     void updateFullSuccess() throws Exception {
-        final Author original = new Author(ID, NAME, SURNAME);
+        final Book original = new Book(ID, NAME);
         final String newName = "New_" + NAME;
-        final String newSurname = "New_" + SURNAME;
-        final Author newAuth = new Author(ID, newName, newSurname);
+        final Book newAuth = new Book(ID, newName);
 
-        final String request = String.format("%s/%d?%s=%s&%s=%s", AuthorController.PREFIX, ID, AuthorController.SURNAME_PARAM,
-                newSurname, AuthorController.NAME_PARAM, newName);
+        final String request = String.format("%s/%s?%s=%s", BookController.PREFIX, ID, BookController.NAME_PARAM, newName);
         System.out.println(request);
 
         Mockito.when(impl.findById(ID)).thenReturn(Optional.of(original));
@@ -152,13 +125,12 @@ public class AuthorControllerTest {
         this.mockMvc.perform(MockMvcRequestBuilders.put(request)
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.status().isCreated())
-            .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(newName))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.surname").value(newSurname));
+            .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(newName));
     }
     
     @Test
     void updateNameFailure() throws Exception {
-        final String request = String.format("%s/%d?%s=%s", AuthorController.PREFIX, ID, AuthorController.NAME_PARAM,
+        final String request = String.format("%s/%s?%s=%s", BookController.PREFIX, ID, BookController.NAME_PARAM,
                 NAME);
         Mockito.when(impl.findById(ID)).thenReturn(Optional.empty());
 
@@ -166,24 +138,12 @@ public class AuthorControllerTest {
                 .content(""))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
 
-    }
+    }   
     
-    @Test
-    void updateSurnameFailure() throws Exception {
-        final String request = String.format("%s/%d?%s=%s", AuthorController.PREFIX, ID, AuthorController.SURNAME_PARAM,
-                SURNAME);
-        System.out.println(request);
-        Mockito.when(impl.findById(ID)).thenReturn(Optional.empty());
-
-        this.mockMvc.perform(MockMvcRequestBuilders.put(request)
-                .content(""))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
-
-    }
     
     @Test
     void updateNoParamsFailure() throws Exception {
-        final String request = String.format("%s/%d", AuthorController.PREFIX, ID);
+        final String request = String.format("%s/%s", BookController.PREFIX, ID);
         System.out.println(request);
         Mockito.when(impl.findById(ID)).thenReturn(Optional.empty());
 
@@ -195,7 +155,7 @@ public class AuthorControllerTest {
     
     @Test
     void updateFakeParamFailure() throws Exception {
-        final String request = String.format("%s/%d?%s=%s", AuthorController.PREFIX, ID, "FAKE_PARAM", NAME);
+        final String request = String.format("%s/%s?%s=%s", BookController.PREFIX, ID, "FAKE_PARAM", NAME);
         System.out.println(request);
         Mockito.when(impl.findById(ID)).thenReturn(Optional.empty());
 
@@ -207,7 +167,7 @@ public class AuthorControllerTest {
 
     @Test
     void deleteModelSuccess() throws Exception {
-        final String request = String.format("%s/%d", AuthorController.PREFIX, ID);
+        final String request = String.format("%s/%s", BookController.PREFIX, ID);
         final String response = "true";
         Mockito.when(impl.existById(ID)).thenReturn(true);
 
@@ -220,7 +180,7 @@ public class AuthorControllerTest {
     
     @Test
     void deleteModelFailure() throws Exception{
-        final String request = String.format("%s/%d", AuthorController.PREFIX, ID);
+        final String request = String.format("%s/%s", BookController.PREFIX, ID);
         final String response = "false";
         Mockito.when(impl.existById(ID)).thenReturn(false);
 
@@ -230,4 +190,5 @@ public class AuthorControllerTest {
             .andExpect(MockMvcResultMatchers.status().isNotFound());       
 
     }
+    
 }

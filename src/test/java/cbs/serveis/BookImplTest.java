@@ -1,4 +1,4 @@
-package hackaton.demo.serveis;
+package cbs.serveis;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -15,8 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import hackaton.models.Book;
-import hackaton.serveis.BookImpl;
+import cbs.models.Book;
 
 @SpringBootTest
 @Transactional

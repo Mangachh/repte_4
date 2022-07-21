@@ -1,9 +1,9 @@
-package hackaton.repositories;
+package cbs.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import hackaton.models.Author;
+import cbs.models.Author;
 
 /**
  * The Author repository

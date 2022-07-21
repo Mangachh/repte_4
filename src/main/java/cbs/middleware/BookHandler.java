@@ -1,4 +1,4 @@
-package hackaton.middleware;
+package cbs.middleware;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import hackaton.controller.BookController;
+import cbs.controller.BookController;
 
 @Component
 /**

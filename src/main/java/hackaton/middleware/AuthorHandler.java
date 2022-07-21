@@ -22,20 +22,24 @@ public class AuthorHandler implements HandlerInterceptor {
         if (request.getRequestURI().contains(AuthorController.PREFIX)) {
             if (request.getMethod().toLowerCase().equals("post")) {
                 return this.hasNameAndSurname(request, response);
-            } else if (request.getMethod().toLowerCase().equals("put")) {
+            }
+
+            if (request.getMethod().toLowerCase().equals("put")) {
                 return this.hasNameOrSurname(request, response);
             }
         }
 
         return true;
-        //return HandlerInterceptor.super.preHandle(request, response, handler);
+        // return HandlerInterceptor.super.preHandle(request, response, handler);
     }
-    
+
     /**
-     * Check if the request has "name" AND "surname" as a parameter, is so returns true
-     * @param request  : the request 
+     * Check if the request has "name" AND "surname" as a parameter, is so returns
+     * true
+     * 
+     * @param request  : the request
      * @param response : the response, modified if parameters not found
-     * @return         : has the request name & surname as parameters?
+     * @return : has the request name & surname as parameters?
      */
     private boolean hasNameAndSurname(final HttpServletRequest request, final HttpServletResponse response) {
         if (request.getParameter(AuthorController.NAME_PARAM) == null
@@ -48,12 +52,13 @@ public class AuthorHandler implements HandlerInterceptor {
         return true;
 
     }
-    
+
     /**
      * Check if the request has "name" OR "surname" as parameter, is so returns true
-     * @param request  : the request 
+     * 
+     * @param request  : the request
      * @param response : the response, modified if parameters not found
-     * @return         : has the request name & surname as parameters?
+     * @return : has the request name & surname as parameters?
      */
     private boolean hasNameOrSurname(final HttpServletRequest request, final HttpServletResponse response) {
         if (request.getParameter(AuthorController.NAME_PARAM) == null
@@ -66,5 +71,4 @@ public class AuthorHandler implements HandlerInterceptor {
         return true;
     }
 
-    
 }

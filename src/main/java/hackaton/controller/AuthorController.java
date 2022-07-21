@@ -90,8 +90,8 @@ public class AuthorController {
      */
     @PutMapping(PREFIX + "/{"+ ID_PARAM + "}")
     public ResponseEntity<Author> updateById(@PathVariable(name = ID_PARAM, required = true) final Long id,
-            @RequestParam(name = NAME_PARAM) final String name,
-            @RequestParam(name = SURNAME_PARAM) final String surname) {
+            @RequestParam(name = NAME_PARAM, required = false) final String name,
+            @RequestParam(name = SURNAME_PARAM, required = false) final String surname) {
         
         Optional<Author> toMod = this.imp.findById(id);
 

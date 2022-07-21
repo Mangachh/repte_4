@@ -1,10 +1,7 @@
 package cbs.models;
 
-import javax.annotation.Generated;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -32,7 +29,6 @@ public class Book {
     @Column(length = 13)
     /**
      * The isbn of the book. Used as an id. 
-     * TODO: in production, change to a auto-generated id
      */
     private String isbn;
 

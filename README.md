@@ -19,6 +19,20 @@ The application allows to choose between two databases. To select one or the oth
   - File: application-h2.prperties
   - Profile: h2
 
+## Endpoints
+- ### Author:
+    - **POST** host:3000/cbs/author?name={input_name}&surname={input_surname} -> adds an author to the database
+    - **GET** host:3000/cbs/author/all -> gets a list of all the authors in the database
+    - **GET** host:3000/cbs/author/{author_id} -> gets an author by it's id, if exists
+    - **PUT** host:3000/cbs/author/{author_id}?name={new_name}&surname={new_surname} -> updates author's Name, surname OR both if exist.
+    - **DELETE** host:3000/cbs/author/{author_id} -> deletes the author with the id provided, if exists 
+  
+- ### Book:
+    - **POST** host:3000/cbs/book?name={input_name}&isbn={input_isbn} -> adds a book into the database using the *isbn* as primary key
+    - **GET** host:3000/cbs/book/all -> gets a list of all the books in the database
+    - **GET** host:3000/cbs/book/{book_isbn} -> gets a book by it's isbn, if exists
+    - **PUT** host:3000/cbs/book/{book_isbn}?name={new_name} -> updates book's Name if exist.
+    - **DELETE** host:3000/cbs/book/{book_isbn} -> deletes the book with the provided isbn, if exists 
 
 ## Testing
 There are various tests provided in the project. There are tests for the repositories and for the controllers. In addition, a Postman Collection is provided.
